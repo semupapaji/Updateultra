@@ -1,0 +1,369 @@
+<!-- templates/login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | JUBAYER HOSTING</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        
+        * { font-family: 'Inter', sans-serif; }
+        
+        body {
+            background: #0a0b0f;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 30% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 50%, rgba(236, 72, 153, 0.06) 0%, transparent 60%);
+            animation: rotate 30s linear infinite;
+            z-index: 0;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Floating Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            z-index: 0;
+            animation: float 8s ease-in-out infinite;
+        }
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: rgba(99, 102, 241, 0.3);
+            top: -100px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: rgba(236, 72, 153, 0.25);
+            bottom: -50px;
+            left: -50px;
+            animation-delay: -4s;
+        }
+        .orb-3 {
+            width: 200px;
+            height: 200px;
+            background: rgba(16, 185, 129, 0.2);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -2s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+        
+        .login-card {
+            position: relative;
+            z-index: 1;
+            background: rgba(16, 18, 27, 0.92);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 2rem;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 50px 80px -20px rgba(0, 0, 0, 0.8),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+        
+        .login-card::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 2rem;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(236, 72, 153, 0.2), rgba(99, 102, 241, 0.3));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        
+        .logo-wrapper {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 1.25rem;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+            border-radius: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.3);
+        }
+        
+        .logo-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 1.5rem;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            opacity: 0.3;
+            filter: blur(10px);
+            z-index: -1;
+        }
+        
+        .logo-wrapper i {
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .input-field {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.75rem;
+            padding: 0.8rem 1rem;
+            width: 100%;
+            color: #fff;
+            transition: all 0.3s;
+            outline: none;
+            font-size: 0.9rem;
+        }
+        
+        .input-field:focus {
+            border-color: #6366f1;
+            background: rgba(99, 102, 241, 0.05);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+        
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.25);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 0.75rem;
+            padding: 0.85rem;
+            width: 100%;
+            font-weight: 700;
+            color: white;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .btn-primary:hover::before {
+            opacity: 1;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-primary span {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .divider-text {
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .master-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(251, 191, 36, 0.15);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .master-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(251, 191, 36, 0.25);
+        }
+        
+        .master-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(251, 191, 36, 0.12);
+            color: #fbbf24;
+            padding: 0.2rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+        
+        .master-key {
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            color: #fbbf24;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.15rem 0.5rem;
+            border-radius: 0.25rem;
+        }
+        
+        .user-cred {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .user-cred span {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Error Animation */
+        .error-box {
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-6px); }
+            80% { transform: translateX(6px); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 1.5rem;
+                border-radius: 1.5rem;
+            }
+            .logo-wrapper {
+                width: 60px;
+                height: 60px;
+            }
+            .logo-wrapper i {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="login-card">
+        <!-- Logo -->
+        <div class="text-center">
+            <div class="logo-wrapper">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <h1 class="text-2xl font-extrabold text-white tracking-tight">
+                JUBAYER <span style="background: linear-gradient(135deg, #6366f1, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">HOSTING</span>
+            </h1>
+            <p class="text-sm text-gray-500 mt-1 font-light">Premium Hosting Platform</p>
+        </div>
+
+        {% if error %}
+        <div class="error-box bg-red-500/10 border border-red-500/20 rounded-lg p-3 mt-6 text-red-400 text-sm text-center">
+            <i class="fas fa-exclamation-circle mr-2"></i> {{ error }}
+        </div>
+        {% endif %}
+
+        <!-- User Login Form -->
+        <form method="POST" class="mt-6">
+            <div class="mb-3">
+                <label class="block text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1.5">Username</label>
+                <input type="text" name="username" placeholder="Enter username" required class="input-field">
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1.5">Password</label>
+                <input type="password" name="password" placeholder="Enter password" required class="input-field">
+            </div>
+            <button type="submit" class="btn-primary">
+                <span><i class="fas fa-sign-in-alt mr-2"></i> Sign In</span>
+            </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="divider">
+            <div class="divider-line"></div>
+            <span class="divider-text">Master Access</span>
+            <div class="divider-line"></div>
+        </div>
+
+        <!-- Master Login Info -->
+        <div class="master-card">
+            <div class="flex items-center gap-2 mb-2">
+                <i class="fas fa-key text-yellow-400 text-sm"></i>
+                <span class="text-xs font-semibold text-yellow-400">Permanent Master Login</span>
+                <span class="master-badge ml-auto">
+                    <i class="fas fa-shield-alt text-[10px]"></i> Always Active
+                </span>
+            </div>
+            <div class="flex flex-col gap-1 text-xs">
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-500">Username</span>
+                    <span class="text-gray-300 font-mono">master</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-500">Password</span>
+                    <span class="master-key">JubayerMasterKey2026</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-5 flex items-center justify-center gap-4 user-cred">
+            <span><i class="fas fa-user text-blue-400 mr-1"></i> <span>admin</span></span>
+            <span class="text-gray-600">|</span>
+            <span><i class="fas fa-sync-alt text-green-400 mr-1"></i> <span>Password changeable</span></span>
+        </div>
+    </div>
+</body>
+</html>
