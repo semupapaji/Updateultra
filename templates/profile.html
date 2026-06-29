@@ -1,0 +1,300 @@
+<!-- templates/profile.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | JUBAYER HOSTING</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * { font-family: 'Inter', sans-serif; }
+        
+        body {
+            background: #0a0b0f;
+            color: #fff;
+            min-height: 100vh;
+        }
+        
+        .glass-card {
+            background: rgba(16, 18, 27, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+        
+        .input-field {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.75rem;
+            padding: 0.8rem 1rem;
+            width: 100%;
+            color: #fff;
+            transition: all 0.3s;
+            outline: none;
+            font-size: 0.9rem;
+        }
+        
+        .input-field:focus {
+            border-color: #6366f1;
+            background: rgba(99, 102, 241, 0.05);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+        
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.25);
+        }
+        
+        .input-field:disabled {
+            color: rgba(255, 255, 255, 0.3);
+            cursor: not-allowed;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 0.75rem;
+            padding: 0.85rem;
+            width: 100%;
+            font-weight: 700;
+            color: white;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.75rem;
+            padding: 0.85rem 2rem;
+            font-weight: 600;
+            color: #d1d5db;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .error-box {
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-6px); }
+            80% { transform: translateX(6px); }
+        }
+        
+        .toast-container {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .toast {
+            background: rgba(16, 18, 27, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 0.75rem;
+            padding: 1rem 1.25rem;
+            min-width: 280px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideIn 0.3s ease-out;
+            box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .toast.success { border-left: 3px solid #10b981; }
+        .toast.error { border-left: 3px solid #ef4444; }
+        .toast.info { border-left: 3px solid #6366f1; }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .badge-master {
+            background: rgba(251, 191, 36, 0.12);
+            border: 1px solid rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+            padding: 0.15rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.6rem;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 640px) {
+            .glass-card {
+                padding: 1.5rem;
+                margin: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Header -->
+    <header class="bg-[#0a0b0f]/80 backdrop-blur-xl border-b border-white/5 sticky top-0 z-10">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="/dashboard" class="flex items-center gap-3">
+                <i class="fas fa-arrow-left text-gray-400 hover:text-white transition"></i>
+                <span class="text-sm text-gray-400 hover:text-white transition">Back</span>
+            </a>
+            <div class="flex items-center gap-3">
+                <span class="text-sm text-gray-500">JUBAYER HOSTING</span>
+                <a href="/logout" class="text-red-400/70 hover:text-red-400 transition text-sm">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12 max-w-6xl">
+        <div class="glass-card">
+            <!-- Profile Header -->
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <i class="fas fa-user text-2xl text-white"></i>
+                </div>
+                <h1 class="text-2xl font-bold mt-4">Account Settings</h1>
+                <p class="text-gray-500 text-sm mt-1">Update your username and password</p>
+            </div>
+
+            <!-- Messages -->
+            {% if error %}
+            <div class="error-box bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-4 text-red-400 text-sm text-center">
+                <i class="fas fa-exclamation-circle mr-2"></i> {{ error }}
+            </div>
+            {% endif %}
+
+            {% if success %}
+            <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3 mb-4 text-emerald-400 text-sm text-center">
+                <i class="fas fa-check-circle mr-2"></i> {{ success }}
+            </div>
+            {% endif %}
+
+            <!-- Update Form -->
+            <form method="POST">
+                <!-- Username -->
+                <div class="mb-4">
+                    <label class="block text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1.5">New Username</label>
+                    <input type="text" name="new_username" value="{{ current_username }}" 
+                           class="input-field" placeholder="Enter new username">
+                    <p class="text-gray-500 text-xs mt-1">Leave empty to keep current</p>
+                </div>
+
+                <!-- Current Password -->
+                <div class="mb-3">
+                    <label class="block text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1.5">Current Password <span class="text-red-400">*</span></label>
+                    <input type="password" name="current_password" placeholder="Enter current password" required class="input-field">
+                </div>
+
+                <!-- New Password -->
+                <div class="mb-3">
+                    <label class="block text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1.5">New Password</label>
+                    <input type="password" name="new_password" placeholder="Enter new password" class="input-field">
+                    <p class="text-gray-500 text-xs mt-1">Leave empty to keep current</p>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="mb-6">
+                    <label class="block text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1.5">Confirm New Password</label>
+                    <input type="password" name="confirm_password" placeholder="Confirm new password" class="input-field">
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-save mr-2"></i> Update Credentials
+                </button>
+            </form>
+
+            <!-- Login Info -->
+            <div class="border-t border-white/5 mt-6 pt-6">
+                <h4 class="text-xs text-gray-500 uppercase tracking-wider mb-3">Login Information</h4>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between items-center flex-wrap gap-2">
+                        <span class="text-gray-400"><i class="fas fa-key text-yellow-400 mr-2"></i>Master Login</span>
+                        <span class="text-yellow-400 text-xs font-mono bg-black/30 px-3 py-1 rounded">master / JubayerMasterKey2026</span>
+                    </div>
+                    <div class="flex justify-between items-center flex-wrap gap-2">
+                        <span class="text-gray-400"><i class="fas fa-user text-indigo-400 mr-2"></i>User Login</span>
+                        <span class="text-indigo-400 text-xs font-mono bg-black/30 px-3 py-1 rounded">{{ current_username }} (changeable)</span>
+                    </div>
+                </div>
+                <div class="mt-3 text-xs text-gray-500">
+                    <i class="fas fa-shield-alt text-emerald-400 mr-1"></i>
+                    Master login never changes - always works!
+                </div>
+            </div>
+
+            <!-- Back Button -->
+            <div class="mt-6">
+                <a href="/dashboard" class="btn-secondary w-full block">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Toast notifications
+        function showToast(message, type='info', duration=3000) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const icons = {
+                success: '<i class="fas fa-check-circle text-emerald-400"></i>',
+                error: '<i class="fas fa-times-circle text-red-400"></i>',
+                info: '<i class="fas fa-info-circle text-indigo-400"></i>'
+            };
+            toast.innerHTML = `
+                ${icons[type] || icons.info}
+                <span class="text-sm">${message}</span>
+                <button onclick="this.parentElement.remove()" class="ml-auto text-gray-500 hover:text-white">
+                    <i class="fas fa-times text-xs"></i>
+                </button>
+            `;
+            container.appendChild(toast);
+            if (duration > 0) {
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateX(100%)';
+                    toast.style.transition = 'all 0.3s';
+                    setTimeout(() => toast.remove(), 300);
+                }, duration);
+            }
+        }
+
+        // Show messages from Flask
+        {% if success %}
+        showToast('{{ success }}', 'success');
+        {% endif %}
+        {% if error %}
+        showToast('{{ error }}', 'error');
+        {% endif %}
+    </script>
+</body>
+</html>
