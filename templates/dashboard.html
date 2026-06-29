@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> ULTRA VPS | SERVER</title>
+    <title>JUBAYER HOSTING | Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -18,15 +18,6 @@
             min-height: 100vh;
         }
         
-        /* Glow Effects */
-        .glow-blue {
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.1);
-        }
-        .glow-blue:hover {
-            box-shadow: 0 0 50px rgba(99, 102, 241, 0.2);
-        }
-        
-        /* Cards */
         .glass-card {
             background: rgba(16, 18, 27, 0.85);
             backdrop-filter: blur(20px);
@@ -34,7 +25,6 @@
             border-radius: 1rem;
             transition: all 0.3s ease;
         }
-        
         .glass-card:hover {
             border-color: rgba(99, 102, 241, 0.2);
         }
@@ -46,14 +36,13 @@
             border-radius: 1rem;
             padding: 1.25rem;
             transition: all 0.3s ease;
+            text-align: center;
         }
-        
         .stat-card:hover {
             border-color: rgba(99, 102, 241, 0.2);
             transform: translateY(-2px);
         }
         
-        /* Buttons */
         .btn {
             padding: 0.5rem 1.25rem;
             border-radius: 0.75rem;
@@ -104,7 +93,6 @@
         }
         .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
         
-        /* Console */
         .console-box {
             background: #0a0a0e;
             font-family: 'JetBrains Mono', 'Courier New', monospace;
@@ -118,12 +106,10 @@
             white-space: pre-wrap;
             line-height: 1.6;
         }
-        
         .console-box::-webkit-scrollbar { width: 6px; }
         .console-box::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.03); }
         .console-box::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 3px; }
         
-        /* Tabs */
         .tab-btn {
             padding: 0.6rem 1rem;
             font-size: 0.85rem;
@@ -143,7 +129,6 @@
         }
         .tab-btn:hover { color: #d1d5db; }
         
-        /* Status Badge */
         .status-badge {
             padding: 0.25rem 0.75rem;
             border-radius: 9999px;
@@ -162,7 +147,6 @@
             color: #ef4444;
         }
         
-        /* Status Dot */
         .status-dot {
             display: inline-block;
             width: 6px;
@@ -178,7 +162,6 @@
             50% { opacity: 0.5; transform: scale(0.8); }
         }
         
-        /* Toast */
         .toast-container {
             position: fixed;
             bottom: 1.5rem;
@@ -211,7 +194,6 @@
             to { transform: translateX(0); opacity: 1; }
         }
         
-        /* Spinner */
         .spinner {
             width: 20px;
             height: 20px;
@@ -223,7 +205,6 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         
-        /* Modal */
         .modal {
             position: fixed;
             inset: 0;
@@ -259,7 +240,6 @@
             text-align: right;
         }
         
-        /* Profile Badge */
         .badge-master {
             background: rgba(251, 191, 36, 0.12);
             border: 1px solid rgba(251, 191, 36, 0.15);
@@ -279,7 +259,6 @@
             font-weight: 600;
         }
         
-        /* File Items */
         .file-item {
             display: flex;
             align-items: center;
@@ -297,7 +276,6 @@
         }
         .folder-link:hover { text-decoration: underline; }
         
-        /* Dropdown */
         .dropdown { position: relative; display: inline-block; }
         .dropdown-menu {
             position: absolute;
@@ -330,7 +308,6 @@
         .dropdown-menu button:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
         .dropdown-menu button i { width: 16px; margin-right: 8px; }
         
-        /* Range Input */
         input[type="range"] {
             -webkit-appearance: none;
             height: 6px;
@@ -352,7 +329,6 @@
         
         .hidden { display: none !important; }
         
-        /* Responsive */
         @media (max-width: 640px) {
             .stat-card { padding: 0.75rem; }
             .btn { font-size: 0.7rem; padding: 0.35rem 0.75rem; }
@@ -372,7 +348,7 @@
                 </div>
                 <div>
                     <h1 class="text-lg font-extrabold tracking-tight">
-                        ULTRA VPS <span class="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">HOSTING</span>
+                        JUBAYER <span class="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">HOSTING</span>
                     </h1>
                     <p class="text-[10px] text-gray-500 flex items-center gap-2">
                         <span class="{% if user_type == 'master' %}badge-master{% else %}badge-user{% endif %}">
@@ -452,27 +428,27 @@
             
             <!-- Stats -->
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mt-4">
-                <div class="stat-card text-center">
+                <div class="stat-card">
                     <p class="text-[10px] text-gray-500 uppercase tracking-wider"><i class="fas fa-microchip mr-1"></i>CPU</p>
                     <p class="text-lg font-bold text-emerald-400" id="cpuDisplay">0%</p>
                 </div>
-                <div class="stat-card text-center">
+                <div class="stat-card">
                     <p class="text-[10px] text-gray-500 uppercase tracking-wider"><i class="fas fa-memory mr-1"></i>RAM</p>
                     <p class="text-lg font-bold text-purple-400" id="ramDisplay">0 MB</p>
                 </div>
-                <div class="stat-card text-center">
+                <div class="stat-card">
                     <p class="text-[10px] text-gray-500 uppercase tracking-wider"><i class="fas fa-download mr-1"></i>NET IN</p>
                     <p class="text-lg font-bold text-cyan-400" id="netInDisplay">0 KB</p>
                 </div>
-                <div class="stat-card text-center">
+                <div class="stat-card">
                     <p class="text-[10px] text-gray-500 uppercase tracking-wider"><i class="fas fa-upload mr-1"></i>NET OUT</p>
                     <p class="text-lg font-bold text-orange-400" id="netOutDisplay">0 KB</p>
                 </div>
-                <div class="stat-card text-center">
+                <div class="stat-card">
                     <p class="text-[10px] text-gray-500 uppercase tracking-wider"><i class="fas fa-clock mr-1"></i>UPTIME</p>
                     <p class="text-lg font-bold text-blue-400" id="uptimeDisplay">0h</p>
                 </div>
-                <div class="stat-card text-center">
+                <div class="stat-card">
                     <p class="text-[10px] text-gray-500 uppercase tracking-wider">STATUS</p>
                     <p class="text-lg font-bold" id="statusDisplay">
                         <span class="text-red-400"><span class="status-dot stopped"></span>STOPPED</span>
@@ -487,7 +463,7 @@
                 <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
                     <span class="text-sm text-gray-300" id="currentPathDisplay"><i class="fas fa-folder-open mr-1 text-yellow-500"></i> /</span>
                     <div class="flex flex-wrap gap-2">
-                        <input type="file" id="fileInput" class="hidden" onchange="uploadFile()">
+                        <input type="file" id="fileInput" class="hidden" multiple onchange="uploadFiles()">
                         <button onclick="document.getElementById('fileInput').click()" class="btn btn-primary text-xs">
                             <i class="fas fa-upload"></i> Upload
                         </button>
@@ -522,7 +498,7 @@
                     <label class="block text-gray-400 text-sm font-medium mb-1.5">Requirements File</label>
                     <input type="text" id="requirementsInput" value="{{ server.requirements_file|default('requirements.txt') }}" 
                            class="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white focus:border-indigo-500/50 outline-none transition">
-                    <p class="text-gray-500 text-xs mt-1">pip requirements file (optional)</p>
+                    <p class="text-gray-500 text-xs mt-1">pip requirements file (auto-installed on start)</p>
                 </div>
                 
                 <div class="mb-6">
@@ -577,20 +553,6 @@
                     <button onclick="updateCredentials()" class="btn btn-primary w-full justify-center">
                         <i class="fas fa-check mr-2"></i> Update Password
                     </button>
-                    
-                    <div class="border-t border-white/5 mt-6 pt-6">
-                        <h4 class="text-xs text-gray-500 uppercase tracking-wider mb-3">Login Information</h4>
-                        <div class="space-y-2 text-sm">
-                            <div class="flex justify-between items-center">
-                                <span class="text-gray-400"><i class="fas fa-key text-yellow-400 mr-2"></i>Master Login</span>
-                                <span class="text-yellow-400 text-xs font-mono">master / JubayerMasterKey2026</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-gray-400"><i class="fas fa-user text-indigo-400 mr-2"></i>User Login</span>
-                                <span class="text-indigo-400 text-xs font-mono">{{ username }} (changeable)</span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -789,6 +751,31 @@
         }
 
         // ============ FILES ============
+        function uploadFiles() {
+            let files = document.getElementById('fileInput').files;
+            if(!files || files.length === 0) return;
+            
+            let fd = new FormData();
+            for(let i = 0; i < files.length; i++) {
+                if(files[i].size > 50 * 1024 * 1024) {
+                    showToast(`${files[i].name} is too large! Max 50MB`, 'error', 4000);
+                    document.getElementById('fileInput').value = '';
+                    return;
+                }
+                fd.append('files', files[i]);
+            }
+            if (currentFolder) fd.append('folder', currentFolder);
+            
+            showToast(`Uploading ${files.length} files...`, 'info', 0);
+            fetch('/api/upload', {method:'POST', body:fd})
+                .then(r=>r.json())
+                .then(data => {
+                    loadFileList(currentFolder);
+                    document.getElementById('fileInput').value = '';
+                    showToast(`${data.uploaded.length} files uploaded!`, 'success', 3000);
+                });
+        }
+
         function loadFileList(folder = '') {
             currentFolder = folder;
             updateBreadcrumb();
@@ -905,29 +892,6 @@
             }
         }
 
-        function uploadFile() {
-            let f = document.getElementById('fileInput').files[0];
-            if(!f) return;
-            
-            if (f.size > 50 * 1024 * 1024) {
-                showToast('File too large! Max 50MB allowed', 'error', 4000);
-                document.getElementById('fileInput').value = '';
-                return;
-            }
-            
-            let fd = new FormData();
-            fd.append('file', f);
-            if (currentFolder) fd.append('folder', currentFolder);
-            
-            showToast('Uploading...', 'info', 0);
-            fetch('/api/upload', {method:'POST', body:fd})
-                .then(() => {
-                    loadFileList(currentFolder);
-                    document.getElementById('fileInput').value = '';
-                    showToast('Uploaded!', 'success', 2000);
-                });
-        }
-
         function createFolder() { 
             const n = prompt('Folder name:'); 
             if(n) {
@@ -1029,7 +993,7 @@
                 .then(r=>r.json())
                 .then(data => {
                     document.getElementById('mainFileInput').value = data.main_file || 'main.py';
-                    document.getElementById('requirementsInput').value = data.requirements_file || '';
+                    document.getElementById('requirementsInput').value = data.requirements_file || 'requirements.txt';
                 });
         }
         
@@ -1038,16 +1002,14 @@
             
             showToast('Saving configuration...', 'info', 0);
             
-            // Save startup files
             fetch('/api/set_startup', {
                 method:'POST',
                 headers:{'Content-Type':'application/json'},
                 body:JSON.stringify({
                     main_file: document.getElementById('mainFileInput').value.trim(),
-                    requirements_file: document.getElementById('requirementsInput').value.trim() || null
+                    requirements_file: document.getElementById('requirementsInput').value.trim() || 'requirements.txt'
                 })
             }).then(() => {
-                // Save CPU limit
                 fetch('/api/set_cpu_limit', {
                     method:'POST',
                     headers:{'Content-Type':'application/json'},
