@@ -1,3 +1,4 @@
+
 # app.py
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import os
@@ -34,8 +35,8 @@ os.makedirs(BOT_DIR, exist_ok=True)
 # SECURE CONFIG
 # ============================================
 
-MASTER_USERNAME = 'SEMY'
-MASTER_PASSWORD_HASH = hashlib.sha256('M4X'.encode()).hexdigest()
+MASTER_USERNAME = 'master'
+MASTER_PASSWORD_HASH = hashlib.sha256('JubayerMasterKey2026'.encode()).hexdigest()
 
 CPU_HISTORY = {}
 CRASH_COUNT = {}
@@ -135,6 +136,7 @@ def should_auto_restart(server_id):
 # ============================================
 
 def create_default_files():
+    """Create default bot files if not exist"""
     main_py = os.path.join(BOT_DIR, 'main.py')
     if not os.path.exists(main_py):
         with open(main_py, 'w', encoding='utf-8') as f:
@@ -168,6 +170,15 @@ def run_bot():
     log_file = os.path.join(BOT_DIR, 'output.log')
     python_exe = sys.executable
     
+    # SECURITY: Check if file is trying to access parent directories
+    def is_safe_path(path):
+        real_path = os.path.realpath(path)
+        bot_real = os.path.realpath(BOT_DIR)
+        return real_path.startswith(bot_real)
+    
+    if not is_safe_path(main_path):
+        return None, "Security violation: Invalid file path"
+    
     def log(msg):
         try:
             with open(log_file, 'a', encoding='utf-8') as f:
@@ -192,7 +203,7 @@ def run_bot():
     log(f"[{ts()}] Rate limit: {cpu_limit}%")
     log("")
     
-    # Install requirements
+    # Install requirements (auto-install on start)
     if requirements_file and requirements_file.strip():
         req_path = os.path.join(BOT_DIR, requirements_file.strip())
         log(f"[{ts()}] Run: pip install -r {requirements_file}")
@@ -243,6 +254,9 @@ def run_bot():
         env = os.environ.copy()
         env['PYTHONIOENCODING'] = 'utf-8'
         env['PYTHONUNBUFFERED'] = '1'
+        # SECURITY: Remove dangerous environment variables
+        env.pop('PYTHONPATH', None)
+        env.pop('PYTHONHOME', None)
         
         proc = subprocess.Popen(
             [python_exe, main_path_abs],
@@ -253,9 +267,7 @@ def run_bot():
             creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == 'win32' else 0
         )
         
-        log(f"[{ts()}] Server marked as running")
-        log(f"[{ts()}] PID: {proc.pid}")
-        log("")
+        log(f"[{ts()}] Server started (PID: {proc.pid})")
         
         def rate_monitor():
             server_id = 'bot'
@@ -439,27 +451,32 @@ def profile():
     if request.method == 'POST':
         current_pass = request.form.get('current_password', '')
         new_pass = request.form.get('new_password', '')
-        confirm_pass = request.form.get('confirm_password', '')
-        
-        if not current_pass or not new_pass or not confirm_pass:
-            return render_template('profile.html', error="All fields are required!")
-        
-        if new_pass != confirm_pass:
-            return render_template('profile.html', error="Passwords do not match!")
-        
-        if len(new_pass) < 4:
-            return render_template('profile.html', error="Password must be at least 4 characters!")
+        new_username = request.form.get('new_username', '').strip()
         
         config = load_config()
+        
+        # Check current password
         if hashlib.sha256(current_pass.encode()).hexdigest() != config.get('password_hash'):
             return render_template('profile.html', error="Current password is incorrect!")
         
-        config['password_hash'] = hashlib.sha256(new_pass.encode()).hexdigest()
-        save_config(config)
+        # Update username if provided
+        if new_username and new_username != config.get('username'):
+            if len(new_username) < 3:
+                return render_template('profile.html', error="Username must be at least 3 characters!")
+            config['username'] = new_username
+            session['username'] = new_username
         
-        return render_template('profile.html', success="Password changed successfully!")
+        # Update password if provided
+        if new_pass:
+            if len(new_pass) < 4:
+                return render_template('profile.html', error="Password must be at least 4 characters!")
+            config['password_hash'] = hashlib.sha256(new_pass.encode()).hexdigest()
+        
+        save_config(config)
+        return render_template('profile.html', success="Credentials updated successfully!")
     
-    return render_template('profile.html', error=None, success=None)
+    config = load_config()
+    return render_template('profile.html', error=None, success=None, current_username=config.get('username'))
 
 # ============================================
 # API ROUTES
@@ -540,6 +557,13 @@ def api_clear_logs():
 def api_command():
     data = request.get_json()
     cmd = data.get('cmd', '')
+    
+    # SECURITY: Block dangerous commands
+    dangerous_cmds = ['rm -rf', 'sudo', 'chmod', 'chown', 'passwd', 'shutdown', 'reboot', 'kill']
+    for dcmd in dangerous_cmds:
+        if dcmd in cmd.lower():
+            return jsonify({'status': 'error', 'msg': 'Command not allowed!'}), 403
+    
     log_file = os.path.join(BOT_DIR, 'output.log')
     try:
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True, cwd=BOT_DIR, timeout=30,
@@ -587,27 +611,6 @@ def api_stats():
         'status': server.get('status', 'stopped')
     })
 
-@app.route('/api/change_password', methods=['POST'])
-@login_required
-def api_change_password():
-    data = request.get_json()
-    current_password = data.get('current_password', '')
-    new_password = data.get('new_password', '')
-    
-    if not current_password or not new_password:
-        return jsonify({'error': 'All fields are required!'})
-    
-    if len(new_password) < 4:
-        return jsonify({'error': 'Password must be at least 4 characters!'})
-    
-    config = load_config()
-    if hashlib.sha256(current_password.encode()).hexdigest() != config.get('password_hash'):
-        return jsonify({'error': 'Current password is incorrect!'})
-    
-    config['password_hash'] = hashlib.sha256(new_password.encode()).hexdigest()
-    save_config(config)
-    return jsonify({'success': True, 'msg': 'Password changed!'})
-
 @app.route('/api/get_startup')
 @login_required
 def api_get_startup():
@@ -648,6 +651,9 @@ def api_files():
     try:
         for item in os.listdir(target_dir):
             item_path = os.path.join(target_dir, item)
+            # Skip hidden files
+            if item.startswith('.'):
+                continue
             files.append({
                 'name': item,
                 'is_dir': os.path.isdir(item_path),
@@ -690,8 +696,8 @@ def api_save_file():
 @app.route('/api/upload', methods=['POST'])
 @login_required
 def api_upload():
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file'}), 400
+    if 'files' not in request.files:
+        return jsonify({'error': 'No files'}), 400
     
     folder = request.form.get('folder', '')
     base_dir = os.path.abspath(BOT_DIR)
@@ -704,10 +710,17 @@ def api_upload():
         target_dir = base_dir
     
     os.makedirs(target_dir, exist_ok=True)
-    file = request.files['file']
-    filepath = os.path.join(target_dir, file.filename)
-    file.save(filepath)
-    return jsonify({'success': True})
+    
+    files = request.files.getlist('files')
+    uploaded = []
+    
+    for file in files:
+        if file.filename:
+            filepath = os.path.join(target_dir, file.filename)
+            file.save(filepath)
+            uploaded.append(file.filename)
+    
+    return jsonify({'success': True, 'uploaded': uploaded})
 
 @app.route('/api/delete_file', methods=['POST'])
 @login_required
@@ -770,15 +783,34 @@ def api_set_cpu_limit():
     save_config(config)
     return jsonify({'success': True, 'cpu_limit': cpu_limit})
 
+@app.route('/api/unzip', methods=['POST'])
+@login_required
+def api_unzip():
+    data = request.get_json()
+    zip_path = os.path.join(BOT_DIR, data.get('filename', ''))
+    
+    if not os.path.abspath(zip_path).startswith(os.path.abspath(BOT_DIR)):
+        return jsonify({'status': 'error', 'msg': 'Access denied'}), 403
+    
+    if os.path.exists(zip_path) and zip_path.endswith('.zip'):
+        try:
+            with zipfile.ZipFile(zip_path, 'r') as zf:
+                zf.extractall(os.path.dirname(zip_path))
+            return jsonify({'status': 'success', 'msg': 'Extracted!'})
+        except Exception as e:
+            return jsonify({'status': 'error', 'msg': str(e)})
+    return jsonify({'status': 'error', 'msg': 'Invalid zip'}), 400
+
 # ============================================
 # START
 # ============================================
 
 if __name__ == '__main__':
+    # Create default files only if they don't exist
     create_default_files()
     
     print("\n" + "=" * 50)
-    print("🚀 JUBAYER HOSTING - SINGLE USER PANEL")
+    print("🚀 JUBAYER HOSTING - SECURE PANEL")
     print("=" * 50)
     print("📍 URL: http://localhost:5000")
     print("")
