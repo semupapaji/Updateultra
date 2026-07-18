@@ -35,8 +35,8 @@ os.makedirs(BOT_DIR, exist_ok=True)
 # SECURE CONFIG
 # ============================================
 
-MASTER_USERNAME = 'master'
-MASTER_PASSWORD_HASH = hashlib.sha256('JubayerMasterKey2026'.encode()).hexdigest()
+MASTER_USERNAME = 'SEMY'
+MASTER_PASSWORD_HASH = hashlib.sha256('M4X'.encode()).hexdigest()
 
 CPU_HISTORY = {}
 CRASH_COUNT = {}
